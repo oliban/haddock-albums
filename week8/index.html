@@ -138,6 +138,7 @@
             display: flex;
             gap: 15px;
             z-index: 100;
+            transition: opacity 0.3s ease;
         }
         
         button {
@@ -179,6 +180,7 @@
             font-size: 16px;
             z-index: 100;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: opacity 0.3s ease;
         }
         
         .title-banner {
@@ -190,6 +192,7 @@
             color: #ffd700;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             z-index: 100;
+            transition: opacity 0.3s ease;
         }
         
         .subtitle {
@@ -200,6 +203,17 @@
             color: #fff;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
             z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* Hide controls när fullscreen mode */
+        .hide-controls .title-banner,
+        .hide-controls .subtitle,
+        .hide-controls .page-counter,
+        .hide-controls .navigation,
+        .hide-controls .page-info {
+            opacity: 0;
+            pointer-events: none;
         }
         
         /* Mobile optimizations */
@@ -435,6 +449,23 @@
             if (touchStartX - touchEndX > swipeThreshold) nextPage();
             if (touchEndX - touchStartX > swipeThreshold) previousPage();
         }
+        
+        // Toggle controls (hide/show) när man klickar på seriesidan
+        let controlsVisible = true;
+        
+        document.addEventListener('click', (e) => {
+            // Om klicket är på en comic page image
+            const comicPage = e.target.closest('.page.comic-page');
+            if (comicPage && comicPage.classList.contains('active')) {
+                controlsVisible = !controlsVisible;
+                
+                if (controlsVisible) {
+                    document.body.classList.remove('hide-controls');
+                } else {
+                    document.body.classList.add('hide-controls');
+                }
+            }
+        });
         
         // Initialize
         showPage(0);
