@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapten Haddocks Äventyr - Vecka 8</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            overflow: hidden;
+        }
+        
+        .album-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .page-container {
+            width: 90%;
+            max-width: 1400px;
+            height: 85vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+        }
+        
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #f4e8d0;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+            border: 3px solid #8b4513;
+            overflow-y: auto;
+        }
+        
+        .page.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 10;
+        }
+        
+        /* Cover page */
+        .page.cover img {
+            max-width: 90%;
+            max-height: 75vh;
+            object-fit: contain;
+            border: 2px solid #000;
+            background: white;
+        }
+        
+        /* Chapter title page */
+        .page.chapter-title {
+            background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+        }
+        
+        .chapter-title h1 {
+            font-size: 48px;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .chapter-title .chapter-icon {
+            font-size: 80px;
+            margin: 30px 0;
+        }
+        
+        /* Strip grid page */
+        .strips-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
+        
+        .strip-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .strip-item img {
+            max-width: 100%;
+            max-height: 35vh;
+            object-fit: contain;
+            border: 2px solid #000;
+            background: white;
+        }
+        
+        .strip-item .strip-title {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #2c1810;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .strip-item .strip-date {
+            font-size: 11px;
+            color: #654321;
+        }
+        
+        .page-title {
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c1810;
+            text-align: center;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+        
+        button {
+            background: #8b4513;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button:hover {
+            background: #a0522d;
+            transform: scale(1.05);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .page-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(139, 69, 19, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 18px;
+            z-index: 100;
+        }
+        
+        .title-banner {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            z-index: 100;
+        }
+        
+        .subtitle {
+            position: fixed;
+            top: 65px;
+            left: 30px;
+            font-size: 16px;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="title-banner">🎨 KAPTEN HADDOCKS ÄVENTYR</div>
+    <div class="subtitle">Vecka 8 • 16 Feb - 22 Feb 2026</div>
+    <div class="page-counter" id="pageCounter">1 / 20</div>
+    
+    <div class="album-container">
+        <div class="page-container" id="pageContainer">
+            <!-- Cover Page -->
+            <div class="page cover active" data-page="0">
+                <img src="cover.jpg" alt="Album Cover">
+                <div class="page-title">VECKA 8 • 2026</div>
+            </div>
+
+            <!-- Chapter: Nyhetshändelser -->
+            <div class="page chapter-title" data-page="1">
+                <div class="chapter-icon">📰</div>
+                <h1>Nyhetshändelser</h1>
+                <div class="page-title">9 strips</div>
+            </div>
+
+            <div class="page" data-page="2">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-00.jpg" alt="Nyheter Haddock Trump Os">
+                        <div class="strip-title">Nyheter Haddock Trump Os</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-01.jpg" alt="Geografi Kaos">
+                        <div class="strip-title">Geografi Kaos</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-02.jpg" alt="Sandra Naslund Ski Cross Brons">
+                        <div class="strip-title">Sandra Naslund Ski Cross Brons</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260221-03.jpg" alt="Tullar Fisto Domare">
+                        <div class="strip-title">Tullar Fisto Domare</div>
+                        <div class="strip-date">2026-02-21 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="page" data-page="3">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260222-04.jpg" alt="Boxare Peruk">
+                        <div class="strip-title">Boxare Peruk</div>
+                        <div class="strip-date">2026-02-22 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260222-05.jpg" alt="Haddock Trump Tullar">
+                        <div class="strip-title">Haddock Trump Tullar</div>
+                        <div class="strip-date">2026-02-22 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260222-06.jpg" alt="Os Curling Final">
+                        <div class="strip-title">Os Curling Final</div>
+                        <div class="strip-date">2026-02-22 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260222-07.jpg" alt="Trump Supreme Court">
+                        <div class="strip-title">Trump Supreme Court</div>
+                        <div class="strip-date">2026-02-22 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="page" data-page="4">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260222-08.jpg" alt="Vargdund Os">
+                        <div class="strip-title">Vargdund Os</div>
+                        <div class="strip-date">2026-02-22 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Chapter: Personer & Porträtt -->
+            <div class="page chapter-title" data-page="5">
+                <div class="chapter-icon">👥</div>
+                <h1>Personer & Porträtt</h1>
+                <div class="page-title">13 strips</div>
+            </div>
+
+            <div class="page" data-page="6">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260218-00.jpg" alt="Bobby Haddock V3">
+                        <div class="strip-title">Bobby Haddock V3</div>
+                        <div class="strip-date">2026-02-18 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260218-01.jpg" alt="Haddock Bobby Del2">
+                        <div class="strip-title">Haddock Bobby Del2</div>
+                        <div class="strip-date">2026-02-18 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260218-02.jpg" alt="Haddock Bobby Rolf">
+                        <div class="strip-title">Haddock Bobby Rolf</div>
+                        <div class="strip-date">2026-02-18 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260218-03.jpg" alt="Haddock Helena Krabba">
+                        <div class="strip-title">Haddock Helena Krabba</div>
+                        <div class="strip-date">2026-02-18 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="page" data-page="7">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-04.jpg" alt="Leif Lunch Haddock">
+                        <div class="strip-title">Leif Lunch Haddock</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-05.jpg" alt="Leif Lunch Tradition">
+                        <div class="strip-title">Leif Lunch Tradition</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-06.jpg" alt="Andrew Arrestering">
+                        <div class="strip-title">Andrew Arrestering</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-07.jpg" alt="Bobby Roadtrip Korrekt">
+                        <div class="strip-title">Bobby Roadtrip Korrekt</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="page" data-page="8">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-08.jpg" alt="Bobby Roadtrip Map">
+                        <div class="strip-title">Bobby Roadtrip Map</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-09.jpg" alt="Daniel Jagefeldt Karikatur">
+                        <div class="strip-title">Daniel Jagefeldt Karikatur</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-10.jpg" alt="Daniel Telefonsamtal">
+                        <div class="strip-title">Daniel Telefonsamtal</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-11.jpg" alt="Fernetfredag Bobby">
+                        <div class="strip-title">Fernetfredag Bobby</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="page" data-page="9">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-12.jpg" alt="Wivan Telefonsamtal">
+                        <div class="strip-title">Wivan Telefonsamtal</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Chapter: Meta & Kreativitet -->
+            <div class="page chapter-title" data-page="10">
+                <div class="chapter-icon">🎨</div>
+                <h1>Meta & Kreativitet</h1>
+                <div class="page-title">6 strips</div>
+            </div>
+
+            <div class="page" data-page="11">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-00.jpg" alt="Heman Fredsforhandlingar">
+                        <div class="strip-title">Heman Fredsforhandlingar</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-01.jpg" alt="Openclaw Historia">
+                        <div class="strip-title">Openclaw Historia</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-02.jpg" alt="Heathcliff Fennell Film Inspired">
+                        <div class="strip-title">Heathcliff Fennell Film Inspired</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-03.jpg" alt="Heathcliff Springer 2026 Modern">
+                        <div class="strip-title">Heathcliff Springer 2026 Modern</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="page" data-page="12">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260221-04.jpg" alt="Tts Fix Haddock Proper">
+                        <div class="strip-title">Tts Fix Haddock Proper</div>
+                        <div class="strip-date">2026-02-21 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260221-05.jpg" alt="Tts Fix Haddock">
+                        <div class="strip-title">Tts Fix Haddock</div>
+                        <div class="strip-date">2026-02-21 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Chapter: Geografi & Resor -->
+            <div class="page chapter-title" data-page="13">
+                <div class="chapter-icon">🗺️</div>
+                <h1>Geografi & Resor</h1>
+                <div class="page-title">1 strip</div>
+            </div>
+
+            <div class="page" data-page="14">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-00.jpg" alt="Sombor Karta">
+                        <div class="strip-title">Sombor Karta</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Chapter: Humor & Vardagsliv -->
+            <div class="page chapter-title" data-page="15">
+                <div class="chapter-icon">😄</div>
+                <h1>Humor & Vardagsliv</h1>
+                <div class="page-title">3 strips</div>
+            </div>
+
+            <div class="page" data-page="16">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-00.jpg" alt="Haddock Stickning">
+                        <div class="strip-title">Haddock Stickning</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-01.jpg" alt="Lunch Graf">
+                        <div class="strip-title">Lunch Graf</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260220-02.jpg" alt="Fernetfredag">
+                        <div class="strip-title">Fernetfredag</div>
+                        <div class="strip-date">2026-02-20 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Chapter: Övrigt -->
+            <div class="page chapter-title" data-page="17">
+                <div class="chapter-icon">⚓</div>
+                <h1>Övrigt</h1>
+                <div class="page-title">6 strips</div>
+            </div>
+
+            <div class="page" data-page="18">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-00.jpg" alt="Dagens Aventyr">
+                        <div class="strip-title">Dagens Aventyr</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-01.jpg" alt="Haddock Vem Ar Jag">
+                        <div class="strip-title">Haddock Vem Ar Jag</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260219-02.jpg" alt="Plejd Kontrollfreak">
+                        <div class="strip-title">Plejd Kontrollfreak</div>
+                        <div class="strip-date">2026-02-19 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260221-03.jpg" alt="Haddock Fisto Hogsta Domstolen">
+                        <div class="strip-title">Haddock Fisto Hogsta Domstolen</div>
+                        <div class="strip-date">2026-02-21 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="page" data-page="19">
+                <div class="strips-grid">
+
+                    <div class="strip-item">
+                        <img src="strip-20260221-04.jpg" alt="Haddock Veckans Vader">
+                        <div class="strip-title">Haddock Veckans Vader</div>
+                        <div class="strip-date">2026-02-21 00:00:00</div>
+                    </div>
+
+                    <div class="strip-item">
+                        <img src="strip-20260221-05.jpg" alt="Tullturbulensen">
+                        <div class="strip-title">Tullturbulensen</div>
+                        <div class="strip-date">2026-02-21 00:00:00</div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="navigation">
+            <button id="prevBtn" onclick="previousPage()">◀ Föregående</button>
+            <button id="nextBtn" onclick="nextPage()">Nästa ▶</button>
+        </div>
+    </div>
+    
+    <script>
+        let currentPage = 0;
+        const totalPages = 20;
+        
+        function showPage(pageNum) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach((page, index) => {
+                if (index === pageNum) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+            
+            document.getElementById('pageCounter').textContent = `${pageNum + 1} / ${totalPages}`;
+            
+            // Update button states
+            document.getElementById('prevBtn').disabled = (pageNum === 0);
+            document.getElementById('nextBtn').disabled = (pageNum === totalPages - 1);
+        }
+        
+        function nextPage() {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                showPage(currentPage);
+            }
+        }
+        
+        function previousPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                showPage(currentPage);
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextPage();
+            if (e.key === 'ArrowLeft') previousPage();
+        });
+        
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            if (touchStartX - touchEndX > 50) nextPage();
+            if (touchEndX - touchStartX > 50) previousPage();
+        }
+        
+        // Initialize
+        showPage(0);
+    </script>
+</body>
+</html>
