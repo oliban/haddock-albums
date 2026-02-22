@@ -99,27 +99,35 @@
         .page.comic-page {
             padding: 10px;
             background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .page.comic-page img {
-            width: 100%;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
             height: auto;
             display: block;
             border: 1px solid #ccc;
+            object-fit: contain;
             /* Bilden är zoombar via pinch/double-tap på touch-enheter */
         }
         
         .page-info {
             position: absolute;
-            bottom: 10px;
+            bottom: 15px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             padding: 8px 15px;
             border-radius: 15px;
             font-size: 12px;
             color: #654321;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 5;
+            pointer-events: none; /* Låt användaren klicka igenom */
         }
         
         .navigation {
@@ -389,21 +397,41 @@
             }
         });
         
-        // Touch/swipe support
+        // Touch/swipe support (disable när man zoomar)
         let touchStartX = 0;
         let touchEndX = 0;
+        let isPinching = false;
         
         document.addEventListener('touchstart', (e) => {
+            // Detektera multi-touch (pinch zoom)
+            if (e.touches.length > 1) {
+                isPinching = true;
+                return;
+            }
+            isPinching = false;
             touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
         
+        document.addEventListener('touchmove', (e) => {
+            // Om multi-touch, det är zoom
+            if (e.touches.length > 1) {
+                isPinching = true;
+            }
+        }, { passive: true });
+        
         document.addEventListener('touchend', (e) => {
+            // Ignorera swipe om det var zoom
+            if (isPinching) {
+                isPinching = false;
+                return;
+            }
+            
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
         }, { passive: true });
         
         function handleSwipe() {
-            const swipeThreshold = 50;
+            const swipeThreshold = 75; // Högre threshold för att undvika oavsiktliga swipes
             if (touchStartX - touchEndX > swipeThreshold) nextPage();
             if (touchEndX - touchStartX > swipeThreshold) previousPage();
         }
