@@ -65,6 +65,10 @@
       font-size: 32px;
       margin-right: 15px;
     }
+    .latest {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: #ffd700;
+    }
   </style>
 </head>
 <body>
@@ -76,38 +80,32 @@
     </div>
     
     <ul id="albums">
-      <!-- Albums listas här -->
     </ul>
   </div>
   
   <script>
-    // Scan för tillgängliga veckor
-    const albums = [];
+    // Scanna efter vecko-kataloger
+    const weeks = [];
     
-    // Lägg till veckor här (uppdateras automatiskt)
-    // Format: { week: 8, year: 2026, strips: 38, dateRange: '17 Feb - 23 Feb 2026' }
+    // Läs aktuella veckor från katalogstrukturen
+    // (Detta fylls i automatiskt av publish-scriptet)
+    const weekDirs = ["week8"];
     
     const albumList = document.getElementById('albums');
     
-    // Läs kataloginnehåll (om möjligt) eller hårdkoda
-    // För nu, hårdkoda vecka 8
-    const weekDirs = ['week8'];
-    
-    weekDirs.forEach(dir => {
+    weekDirs.forEach((dir, index) => {
       const weekNum = dir.replace('week', '');
       const li = document.createElement('li');
+      if (index === 0) li.className = 'latest';
+      
       li.innerHTML = `
         <a href="${dir}/index.html">
           <span class="emoji">📚</span>Vecka ${weekNum}, 2026
         </a>
-        <div class="week-info">Klicka för att bläddra i albumet</div>
+        <div class="week-info">${index === 0 ? '✨ Senaste album • ' : ''}Klicka för att bläddra</div>
       `;
       albumList.appendChild(li);
     });
-    
-    if (weekDirs.length === 0) {
-      albumList.innerHTML = '<li style="text-align:center;">Inga album än. Kommer snart!</li>';
-    }
   </script>
 </body>
 </html>
