@@ -222,15 +222,15 @@
         
         const coverSrc = data.dir + '/cover.jpg';
         
-        card.innerHTML = \`
-          \${index === 0 ? '<div class="album-badge">✨ Nytt</div>' : ''}
-          <img class="album-cover" src="\${coverSrc}" alt="Vecka \${data.week}" 
-               onerror="this.outerHTML='<div class=\\'album-cover-placeholder\\'>📚</div>'" />
+        card.innerHTML = `
+          ${index === 0 ? '<div class="album-badge">✨ Nytt</div>' : ''}
+          <img class="album-cover" src="${coverSrc}" alt="Vecka ${data.week}" 
+               onerror="this.outerHTML='<div class=\'album-cover-placeholder\'>📚</div>'" />
           <div class="album-info">
-            <div class="album-title">Vecka \${data.week}, 2026</div>
-            <div class="album-meta">\${data.strips} strips</div>
+            <div class="album-title">Vecka ${data.week}, 2026</div>
+            <div class="album-meta">${data.strips} strips</div>
           </div>
-        \`;
+        `;
         albumGrid.appendChild(card);
       });
       
