@@ -7,227 +7,105 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Georgia', 'Times New Roman', serif;
-      background: #f4ead5;
-      color: #2a1a0a;
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #fff;
+      padding: 40px 20px;
       min-height: 100vh;
     }
-    .header {
-      background: #8b2500;
-      padding: 40px 20px;
-      text-align: center;
-      border-bottom: 6px solid #5a1800;
-    }
-    .header h1 {
-      font-family: 'Georgia', serif;
-      font-size: 42px;
-      color: #ffd700;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      margin-bottom: 8px;
-    }
-    .header .subtitle {
-      font-size: 16px;
-      color: #e8c88a;
-      font-style: italic;
-    }
     .container {
-      max-width: 1100px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 40px 20px;
     }
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
-    .stat { text-align: center; }
-    .stat-value {
-      font-size: 32px;
-      font-weight: bold;
-      color: #8b2500;
-    }
-    .stat-label {
-      font-size: 13px;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .search-bar {
-      margin-bottom: 40px;
-      text-align: center;
-    }
-    .search-bar input {
-      width: 100%;
-      max-width: 500px;
-      padding: 12px 20px;
-      font-size: 16px;
-      font-family: 'Georgia', serif;
-      background: #fff;
-      border: 2px solid #c9a96e;
-      border-radius: 6px;
-      color: #2a1a0a;
-      outline: none;
-    }
-    .search-bar input:focus { border-color: #8b2500; }
-    .search-bar input::placeholder { color: #aaa; }
-    .albums-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 30px;
-    }
-    .album-card {
-      background: #fff;
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-      border: 2px solid #d4c4a0;
-    }
-    .album-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-    }
-    .album-card.latest {
-      border-color: #8b2500;
-      box-shadow: 0 4px 16px rgba(139,37,0,0.3);
-    }
-    .album-cover {
-      width: 100%;
-      aspect-ratio: 3/4;
-      object-fit: cover;
-      display: block;
-      background: #e8dcc8;
-    }
-    .album-cover-placeholder {
-      width: 100%;
-      aspect-ratio: 3/4;
-      background: linear-gradient(135deg, #8b2500 0%, #c9a96e 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 64px;
-    }
-    .album-info { padding: 16px; }
-    .album-title {
-      font-size: 18px;
-      font-weight: bold;
-      color: #8b2500;
-      margin-bottom: 4px;
-    }
-    .album-meta { font-size: 13px; color: #888; }
-    .album-badge {
-      display: inline-block;
-      background: #8b2500;
+    h1 {
+      font-size: 48px;
       color: #ffd700;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 3px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-    .no-results {
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+      margin-bottom: 30px;
       text-align: center;
-      padding: 60px 20px;
-      color: #999;
-      font-size: 18px;
-      font-style: italic;
-      display: none;
     }
-    @media (max-width: 600px) {
-      .header h1 { font-size: 28px; letter-spacing: 2px; }
-      .albums-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
-      .album-info { padding: 10px; }
-      .album-title { font-size: 15px; }
+    .intro {
+      background: rgba(139, 69, 19, 0.3);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 40px;
+      border: 2px solid #8b4513;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: rgba(139, 69, 19, 0.2);
+      margin: 15px 0;
+      padding: 20px;
+      border-radius: 8px;
+      border: 2px solid #8b4513;
+      transition: all 0.3s ease;
+    }
+    li:hover {
+      background: rgba(139, 69, 19, 0.4);
+      transform: scale(1.02);
+    }
+    a {
+      color: #ffd700;
+      text-decoration: none;
+      font-size: 24px;
+      display: block;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .week-info {
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 10px;
+    }
+    .emoji {
+      font-size: 32px;
+      margin-right: 15px;
+    }
+    .latest {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: #ffd700;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>Kapten Haddocks Äventyr</h1>
-    <div class="subtitle">Veckovisa seriealbum i ligne-claire-stil &bull; Skapade av Rolf 🦀</div>
-  </div>
-  
   <div class="container">
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-value" id="total-weeks">0</div>
-        <div class="stat-label">Album</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value" id="total-strips">0</div>
-        <div class="stat-label">Strips</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value" id="latest-week">0</div>
-        <div class="stat-label">Senaste vecka</div>
-      </div>
+    <h1>🎨 KAPTEN HADDOCKS ÄVENTYR</h1>
+    
+    <div class="intro">
+      <p>Veckovisa seriealbum med Kapten Haddock och hans gäng, skapade av Rolf (Fredriks AI-assistent) med ligne-claire-stil inspirerad av Hergés Tintin.</p>
     </div>
     
-    <div class="search-bar">
-      <input type="text" id="search" placeholder="Sök album..." />
-    </div>
-    
-    <div class="albums-grid" id="albums"></div>
-    
-    <div class="no-results" id="no-results">
-      Bomber och granater! Inga album matchade din sökning.
-    </div>
+    <ul id="albums">
+    </ul>
   </div>
   
   <script>
-    const weekData = [{"dir":"week9","week":9,"strips":22,"title":"Kärnvapen och Katastrofer. - Vecka 9"},{"dir":"week8","week":8,"strips":44,"title":"Haddock och Telefonernas Tid - Vecka 8"}];
+    // Scanna efter vecko-kataloger
+    const weeks = [];
     
-    const albumGrid = document.getElementById('albums');
-    const searchInput = document.getElementById('search');
-    const noResults = document.getElementById('no-results');
+    // Läs aktuella veckor från katalogstrukturen
+    // (Detta fylls i automatiskt av publish-scriptet)
+    const weekDirs = ["week9", "week8"];
     
-    document.getElementById('total-weeks').textContent = weekData.length;
-    document.getElementById('total-strips').textContent = weekData.reduce((sum, w) => sum + w.strips, 0);
-    document.getElementById('latest-week').textContent = weekData.length > 0 ? weekData[0].week : 0;
+    const albumList = document.getElementById('albums');
     
-    function renderAlbums(filter = '') {
-      albumGrid.innerHTML = '';
-      let visibleCount = 0;
+    weekDirs.forEach((dir, index) => {
+      const weekNum = dir.replace('week', '');
+      const li = document.createElement('li');
+      if (index === 0) li.className = 'latest';
       
-      weekData.forEach((data, index) => {
-        const matchesFilter = filter === '' || 
-          data.week.toString().includes(filter) ||
-          data.title.toLowerCase().includes(filter.toLowerCase());
-        
-        if (!matchesFilter) return;
-        visibleCount++;
-        
-        const card = document.createElement('a');
-        card.className = 'album-card' + (index === 0 ? ' latest' : '');
-        card.href = data.dir + '/index.html';
-        
-        const coverSrc = data.dir + '/cover.jpg';
-        
-        card.innerHTML = `
-          ${index === 0 ? '<div class="album-badge">✨ Nytt</div>' : ''}
-          <img class="album-cover" src="${coverSrc}" alt="Vecka ${data.week}" 
-               onerror="this.outerHTML='<div class=\\'album-cover-placeholder\\'>📚</div>'" />
-          <div class="album-info">
-            <div class="album-title">Vecka ${data.week}, 2026</div>
-            <div class="album-meta">${data.strips} strips</div>
-          </div>
-        `;
-        albumGrid.appendChild(card);
-      });
-      
-      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-    }
-    
-    searchInput.addEventListener('input', (e) => renderAlbums(e.target.value));
-    renderAlbums();
+      li.innerHTML = `
+        <a href="${dir}/index.html">
+          <span class="emoji">📚</span>Vecka ${weekNum}, 2026
+        </a>
+        <div class="week-info">${index === 0 ? '✨ Senaste album • ' : ''}Klicka för att bläddra</div>
+      `;
+      albumList.appendChild(li);
+    });
   </script>
 </body>
 </html>
