@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Hotet från Guadalajara - Vecka 9</title>
+    <title>**Diplomati och Dårskaper** - Vecka 9</title>
     <style>
         * {
             margin: 0;
@@ -183,10 +183,26 @@
             transition: opacity 0.3s ease;
         }
         
-        .title-banner {
+        .back-button {
             position: fixed;
             top: 20px;
             left: 20px;
+            font-size: 24px;
+            color: #ffd700;
+            text-decoration: none;
+            z-index: 101;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 12px;
+            border-radius: 8px;
+            transition: opacity 0.3s ease, background 0.2s;
+        }
+        .back-button:hover {
+            background: rgba(0,0,0,0.7);
+        }
+        .title-banner {
+            position: fixed;
+            top: 20px;
+            left: 70px;
             font-size: 24px;
             font-weight: bold;
             color: #ffd700;
@@ -207,6 +223,7 @@
         }
         
         /* Hide controls när fullscreen mode */
+        .hide-controls .back-button,
         .hide-controls .title-banner,
         .hide-controls .subtitle,
         .hide-controls .page-counter,
@@ -259,7 +276,8 @@
     </style>
 </head>
 <body>
-    <div class="title-banner">🎨 Hotet från Guadalajara</div>
+    <a class="back-button" href="../" title="Alla album (Escape)">◀</a>
+    <div class="title-banner">🎨 **Diplomati och Dårskaper**</div>
     <div class="subtitle">Vecka 9 • 23 Feb - 01 Mar 2026</div>
     <div class="page-counter" id="pageCounter">1 / 10</div>
     
@@ -268,7 +286,7 @@
             <!-- Cover Page -->
             <div class="page cover active" data-page="0">
                 <img src="cover.jpg" alt="Album Cover">
-                <div class="album-title">Hotet från Guadalajara</div>
+                <div class="album-title">**Diplomati och Dårskaper**</div>
                 <div class="week-info">KAPTEN HADDOCKS ÄVENTYR • 2026</div>
             </div>
 
@@ -378,6 +396,9 @@
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
                 previousPage();
+            }
+            if (e.key === 'Escape') {
+                window.location.href = '../';
             }
         });
         
