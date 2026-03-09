@@ -123,15 +123,21 @@
     }
     .album-meta { font-size: 13px; color: #888; }
     .album-badge {
-      display: inline-block;
+      position: absolute;
+      top: 10px;
+      right: 10px;
       background: #8b2500;
       color: #ffd700;
       font-size: 11px;
-      padding: 2px 8px;
+      padding: 4px 10px;
       border-radius: 3px;
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 8px;
+      z-index: 2;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .album-card {
+      position: relative;
     }
     .no-results {
       text-align: center;
@@ -183,7 +189,11 @@
   </div>
   
   <script>
-    const weekData = [{"dir":"week9","week":9,"strips":22,"title":"**Diplomati och Dårskaper** - Vecka 9"},{"dir":"week8","week":8,"strips":44,"title":"Haddock och Telefonernas Tid - Vecka 8"},{"dir":"week11","week":11,"strips":2,"title":"Khamenei och Kalifatet - Vecka 11"},{"dir":"week10","week":10,"strips":20,"title":"Kaos i Alperna - Vecka 10"}];
+    const weekData = [{"dir":"week11","week":11,"strips":2,"title":"Khamenei och Kalifatet - Vecka 11"},{"dir":"week10","week":10,"strips":20,"title":"Kaos i Alperna - Vecka 10"},{"dir":"week9","week":9,"strips":22,"title":"**Diplomati och Dårskaper** - Vecka 9"},{"dir":"week8","week":8,"strips":44,"title":"Haddock och Telefonernas Tid - Vecka 8"}];
+    
+    // Sort by week number descending (highest first)
+    weekData.sort((a, b) => b.week - a.week);
+    const maxWeek = weekData.length > 0 ? weekData[0].week : 0;
     
     const albumGrid = document.getElementById('albums');
     const searchInput = document.getElementById('search');
@@ -191,13 +201,13 @@
     
     document.getElementById('total-weeks').textContent = weekData.length;
     document.getElementById('total-strips').textContent = weekData.reduce((sum, w) => sum + w.strips, 0);
-    document.getElementById('latest-week').textContent = weekData.length > 0 ? weekData[0].week : 0;
+    document.getElementById('latest-week').textContent = maxWeek;
     
     function renderAlbums(filter = '') {
       albumGrid.innerHTML = '';
       let visibleCount = 0;
       
-      weekData.forEach((data, index) => {
+      weekData.forEach((data) => {
         const matchesFilter = filter === '' || 
           data.week.toString().includes(filter) ||
           data.title.toLowerCase().includes(filter.toLowerCase());
@@ -205,19 +215,20 @@
         if (!matchesFilter) return;
         visibleCount++;
         
+        const isLatest = data.week === maxWeek;
         const card = document.createElement('a');
-        card.className = 'album-card' + (index === 0 ? ' latest' : '');
+        card.className = 'album-card' + (isLatest ? ' latest' : '');
         card.href = data.dir + '/index.html';
         
         const coverSrc = data.dir + '/cover.jpg';
         
         card.innerHTML = `
-          ${index === 0 ? '<div class="album-badge">✨ Nytt</div>' : ''}
+          ${isLatest ? '<div class="album-badge">✨ Nytt</div>' : ''}
           <img class="album-cover" src="${coverSrc}" alt="Vecka ${data.week}" 
                onerror="this.outerHTML='<div class=\\'album-cover-placeholder\\'>📚</div>'" />
           <div class="album-info">
-            <div class="album-title">Vecka ${data.week}, 2026</div>
-            <div class="album-meta">${data.strips} strips</div>
+            <div class="album-title">${data.title}</div>
+            <div class="album-meta">Vecka ${data.week} &bull; ${data.strips} strips</div>
           </div>
         `;
         albumGrid.appendChild(card);
