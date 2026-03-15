@@ -159,6 +159,9 @@
   <div class="header">
     <h1>Kapten Haddocks Äventyr</h1>
     <div class="subtitle">Veckovisa seriealbum i ligne-claire-stil &bull; Skapade av Rolf 🦀</div>
+    <div class="subtitle" style="margin-top:8px">
+      <a href="#business" style="color:#ffd700;text-decoration:none;font-style:normal;font-weight:bold">📊 Haddock Business Insider</a>
+    </div>
   </div>
   
   <div class="container">
@@ -186,10 +189,22 @@
     <div class="no-results" id="no-results">
       Bomber och granater! Inga album matchade din sökning.
     </div>
+    
+    <!-- Business Insider Section -->
+    <div id="business" style="margin-top:60px;padding-top:40px;border-top:4px solid #1a3a5c;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:30px;">
+        <div style="background:#1a3a5c;color:#ffd700;padding:8px 20px;border-radius:4px;font-size:24px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;font-family:Georgia,serif;">📊 Haddock Business Insider</div>
+      </div>
+      <p style="color:#666;margin-bottom:24px;font-style:italic;">Veckovis specialutgåva — Affärsidéer i ligne-claire-stil. Corporate meets Tintin.</p>
+      <div class="albums-grid" id="business-albums"></div>
+      <div class="no-results" id="no-business" style="display:none;">
+        Inga Business Insider-album ännu. Första utgåvan kommer snart!
+      </div>
+    </div>
   </div>
   
   <script>
-    const weekData = [{"dir":"week11","week":11,"strips":2,"title":"Khamenei och Kalifatet - Vecka 11"},{"dir":"week10","week":10,"strips":20,"title":"Kaos i Alperna - Vecka 10"},{"dir":"week9","week":9,"strips":22,"title":"**Diplomati och Dårskaper** - Vecka 9"},{"dir":"week8","week":8,"strips":44,"title":"Haddock och Telefonernas Tid - Vecka 8"}];
+    const weekData = [{"dir":"week11","week":11,"strips":18,"title":"**Över Hormuz sund** - Vecka 11"},{"dir":"week10","week":10,"strips":20,"title":"Kaos i Alperna - Vecka 10"},{"dir":"week9","week":9,"strips":22,"title":"**Diplomati och Dårskaper** - Vecka 9"},{"dir":"week8","week":8,"strips":44,"title":"Haddock och Telefonernas Tid - Vecka 8"}];
     
     // Sort by week number descending (highest first)
     weekData.sort((a, b) => b.week - a.week);
@@ -239,6 +254,35 @@
     
     searchInput.addEventListener('input', (e) => renderAlbums(e.target.value));
     renderAlbums();
+    
+    // Business Insider albums
+    const businessData = typeof [] !== 'undefined' ? [] : [];
+    const businessGrid = document.getElementById('business-albums');
+    const noBusiness = document.getElementById('no-business');
+    
+    if (businessData.length === 0) {
+      noBusiness.style.display = 'block';
+    } else {
+      businessData.sort((a, b) => b.week - a.week);
+      businessData.forEach((data, idx) => {
+        const card = document.createElement('a');
+        card.className = 'album-card' + (idx === 0 ? ' latest' : '');
+        card.href = data.dir + '/index.html';
+        card.style.borderColor = '#1a3a5c';
+        
+        const coverSrc = data.dir + '/cover.jpg';
+        card.innerHTML = `
+          ${idx === 0 ? '<div class="album-badge" style="background:#1a3a5c">✨ Nytt</div>' : ''}
+          <img class="album-cover" src="${coverSrc}" alt="Business Vecka ${data.week}" 
+               onerror="this.outerHTML='<div class=\\'album-cover-placeholder\\' style=\\'background:linear-gradient(135deg,#1a3a5c,#ffd700)\\'>📊</div>'" />
+          <div class="album-info">
+            <div class="album-title" style="color:#1a3a5c">${data.title}</div>
+            <div class="album-meta">Vecka ${data.week} &bull; ${data.strips} strips</div>
+          </div>
+        `;
+        businessGrid.appendChild(card);
+      });
+    }
   </script>
 </body>
 </html>
